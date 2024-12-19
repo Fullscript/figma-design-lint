@@ -1,0 +1,83 @@
+import * as React from "react";
+import SettingsPanel from "./SettingsPanel";
+import { motion } from "framer-motion/dist/framer-motion";
+
+function Navigation(props) {
+  const [panelVisible, setPanelVisible] = React.useState(false);
+  let activePage = props.activePage;
+
+  const layersClick = () => {
+    props.onPageSelection("layers");
+  };
+
+  const bulkListClick = () => {
+    props.onPageSelection("bulk");
+  };
+
+  const handleLintRulesChange = (boolean) => {
+    props.updateLintRules(boolean);
+  };
+
+  const handlePanelVisible = (boolean) => {
+    setPanelVisible(boolean);
+  };
+
+  const handleRefreshSelection = () => {
+    props.onRefreshSelection();
+  };
+
+  return (
+    <div key="nav">
+      <div className="navigation-wrapper">
+        <nav className="nav">
+          <motion.div
+            className={`nav-item ${activePage === "bulk" ? "active" : ""}`}
+            onClick={bulkListClick}
+            whileTap={{ scale: 0.98, opacity: 0.8 }}
+          >
+            Errors List
+          </motion.div>
+          <motion.div
+            className={`nav-item ${activePage === "layers" ? "active" : ""}`}
+            onClick={layersClick}
+            whileTap={{ scale: 0.98, opacity: 0.8 }}
+          >
+            Layers
+          </motion.div>
+
+          <div className="nav-icon-wrapper">
+            <motion.button
+              className="icon icon--refresh icon--button settings-button"
+              onClick={(event) => {
+                event.stopPropagation();
+                handleRefreshSelection();
+              }}
+              whileTap={{ scale: 0.9, opacity: 0.8 }}
+            >
+              <img src={require("../assets/refresh.svg")} />
+            </motion.button>
+
+            {/* Hiding the settings panel for now */}
+
+            {/* <motion.button
+              className="icon icon--adjust icon--button settings-button"
+              onClick={event => {
+                event.stopPropagation();
+                handlePanelVisible(true);
+              }}
+              whileTap={{ scale: 0.9, opacity: 0.8 }}
+            ></motion.button> */}
+          </div>
+        </nav>
+      </div>
+      <SettingsPanel
+        panelVisible={panelVisible}
+        onHandlePanelVisible={handlePanelVisible}
+        ignoredErrorArray={props.ignoredErrorArray}
+        updateLintRules={handleLintRulesChange}
+      />
+    </div>
+  );
+}
+
+export default Navigation;
